@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'functions.php';
-
+require_once 'styles.php';
 /*if (($_SERVER['PHP_AUTH_USER'] != 'developers') ||
 ($_SERVER['PHP_AUTH_PW'] != 'team'))
 {
@@ -10,9 +10,7 @@ header('HTTP/1.0 401 Unauthorized');
 print('You must provide the proper credentials!');
 exit;
 }*/
-require_once 'styles.php';
-
-$result = getQuery("SELECT * FROM posts ORDER BY rating DESC");
+$result = getQuery("SELECT * FROM posts ORDER BY rating DESC LIMIT 3");
 mysqli_fetch_all($result,MYSQLI_ASSOC);
 ?>
 <html lang="en" dir="ltr">
@@ -31,7 +29,7 @@ mysqli_fetch_all($result,MYSQLI_ASSOC);
 h1 {
   text-align: center;
   text-transform: uppercase;
-  color: #333;
+
 }
 a {
   text-decoration: none;
@@ -45,27 +43,30 @@ a {
     <div style="padding-left:16px">
   <h1>Blog - is an online publishing platform to post your articles and minds</h1>
     </div>
+    <div style="padding-left:16px">
+    <h2>  <a href="http://5.59.11.66/~developers/create.php" style="color:#34495e">>>> Start Writing! <<<</a></h2><br>
 
-    <div style="padding-left:16px">
-  <h2>Follow interesting authors </h2>
-    </div>
-    <div style="padding-left:16px">
-      <h2>Create interesting content to be heard</h2><br>
     </div>
 </div>
 
-<?php
-for ($i=0; $i < 3; $i++) {
-	$title = $result['title'];
-	$text = $result['text'];
-	$out = "<div class='text'>
-	  <h1>$title</h1>
-	  <p>$text</p>
-	</div>";
-	echo $out;
-	echo "Hello";
-}
- ?>
+
+
+
+<?php foreach ($result as $x): ?>
+	<div class="text">
+	 <?php	 
+	 $id = $x['id']; ?>
+	 <h1><a href="post.php?id=<?=$id?>"><?=$x['title']?></a></h1>
+	 <?php $text = $x['text'];
+				 $text = substr($text,0,200); ?>
+	 <p><?=$text?></p>
+	 <?php $id = $x['id']; ?>
+	</div>
+<?php endforeach ?>
+
+
+
+
 
 
 
